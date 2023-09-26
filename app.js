@@ -14,6 +14,7 @@ app.use("/user", userRouter)
 
 mongoose.connect(URI).then(() => {
      console.log("Database connected"); 
-    app.listen(PORT);
     })
     .catch((err) => console.log(err, "database not connected"))
+    app.listen(PORT, e=>console.log(`server connected on port ${PORT}`));
+
