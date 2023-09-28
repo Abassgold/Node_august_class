@@ -1,6 +1,7 @@
 const userModel = require('../Model/user.model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 const dotenv = require('dotenv')
 dotenv.config()
 let schoolPortal = process.env.SECRET
@@ -47,7 +48,7 @@ const signin = (req, res) => {
                         console.log(`Authentication successful`);
                         res.json({ status: true, message: 'user found', token })
                      }
-                  }) 
+                  })
                }
                else {
                   console.log(`Authentication not successful`);
@@ -67,8 +68,36 @@ const getDashboard = (req, res) => {
       }
       else {
          console.log(result)
-         res.status(200).json({result, message: 'valid'}) 
+         res.status(200).json({ result, message: 'valid' })
       }
    })
 }
-module.exports = { Register, signin, getDashboard } 
+const sendMail = (req, res) => {
+   const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+         // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+         user: "abasskola10@gmail.com",
+         pass: "ujyq ihsx kwgw cidf",
+      },
+   });
+
+   let mailOptions = {
+      from: 'Abasskola10@gmail.com', // sender address
+      to: "olanipekunhikmahkikelomo@gmail.com", // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "Hello world?", // plain text body
+      // html: "<b>Hello world?</b>", // html body
+   }
+   transporter.sendMail(mailOptions, (err, info)=>{
+      if(err){
+         console.log('Error occurs', err)
+         res.send({mss: 'there is an error'})
+      }
+      else{
+         console.log(`Email sent ${info.response}`)
+         res.send({status: true, msg: 'user created'})
+      }
+   })
+}
+module.exports = { Register, signin, getDashboard, sendMail } 
